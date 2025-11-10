@@ -13,6 +13,7 @@ For step 4, I would implement an "IsHeavy" flag on the input packages to opt in 
 For step 5, I would add an id to each parcel (this will just be the index it is in the input array), to keep track off parcels as a parcel can't be discounted twice we need a way to track what ones have been discounted. I would create a list of small parcels sort by price (low to high), and the same for medium parcels. Then I would create a sorted list of all parcels sorted by price (low to high).
 As every 5th is free, take the total number of packages divided by 5 rounded down, and discount that many starting from the start of the overall sorted list. Track which ones got discounted in a set.
 Then iterate through the sorted small and medium lists from the start. Similar thing, divide by 4 rounded down for small, divide by 3 for medium. Iterate that many items from the start of the list, but if a package is already in the set that tracks discounts, then don't count it and keep iterating.
+But this assumes an order of which discount gets applied first, in my example, the every 5th package discount applies first. Total savings could vary based on what condition takes precedence for the discount.
 
 # What I Wish I Did Better
 
