@@ -4,9 +4,9 @@ namespace Courier;
 
 public class CourierService
 {
-    static public OrderSummary CreateOrder(IEnumerable<OrderInputPackage> packages)
+    static public OrderSummary CreateOrder(IEnumerable<OrderInputPackage> packages, OrderInputOptions options)
     {
-        int totalCostInDollars = 0;
+        int packageTotalCostInDollars = 0;
         var summaryPackages = new List<OrderSummaryPackage>();
 
         foreach (OrderInputPackage package in packages)
@@ -26,16 +26,21 @@ public class CourierService
                 _ => PackageSizeLabel.XL
             };
             summaryPackages.Add(new OrderSummaryPackage { Size = package.Size, Cost = costInDollars, SizeLabel = sizelabel });
-            totalCostInDollars += costInDollars;
+            packageTotalCostInDollars += costInDollars;
         }
 
-        return new OrderSummary { TotalCost = totalCostInDollars, Packages = summaryPackages };
+        bool isSpeedy = options.SpeedyDelivery;
+        int totalCostInDollars = packageTotalCostInDollars * (isSpeedy ? 2 : 1);
+        int speedyCost = isSpeedy ? packageTotalCostInDollars : 0;
+
+        return new OrderSummary { TotalCost = totalCostInDollars, Packages = summaryPackages, PackageTotalCost = packageTotalCostInDollars, SpeedyDelivery = isSpeedy, SpeedyCost = speedyCost  };
     }
 
 
 
     public enum PackageSizeLabel { S, M, L, XL};
     public readonly record struct OrderInputPackage(int Size);
+    public readonly record struct OrderInputOptions(bool SpeedyDelivery);
     public readonly record struct OrderSummaryPackage(int Size, int Cost, PackageSizeLabel SizeLabel);
-    public readonly record struct OrderSummary(IReadOnlyList<OrderSummaryPackage> Packages, int TotalCost);
+    public readonly record struct OrderSummary(IReadOnlyList<OrderSummaryPackage> Packages, int PackageTotalCost, bool SpeedyDelivery, int? SpeedyCost, int TotalCost);
 }
