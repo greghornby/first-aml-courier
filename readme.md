@@ -1,3 +1,5 @@
+Run `dotnet test` to test!
+
 # Comments
 
 - The code assumes units as specified in the tasks. Eg dimensions are specified in cm so i use 10 to represent 10cm, not 0.1 (as if it were meters)
